@@ -19,6 +19,8 @@ Seu diferencial técnico baseia-se em varreduras *Lazy Evaluation* que preservam
 - **Eficiência Absoluta em Larga Escala**: Leia arquivos de log massivos (ex: 50GB+) sem sobrecarregar a memória do sistema utilizando blocos de *Python Generators* (Lazy Yield).
 - **Interface Profissional**: Saída colorida, tabular e interpretada através de tabelas visuais usando a biblioteca `rich`.
 - **Filtros Multifatoriais**: Capacidade de pesquisar linhas através de severidades, datas ou Regex personalizadas (com validação anti *Prompt Injection*).
+- **Parsing Dinâmico Inteligente**: Suporte automático a múltiplos formatos, processando nativamente logs textuais, estruturas JSON (Docker, Kubernetes) ou dicionários CSV/TSV.
+- **Auditoria em Tempo Real (Tail -f)**: Opcionalidade de escutar eventos em tempo real enquanto o arquivo cresce, ideal para detecções vivas ou pentest *on the fly*.
 
 ---
 
@@ -61,6 +63,12 @@ pylino api_gateway.log --level WARNING --date "2023-11-20"
 **3. Busca Complexa e Avançada (Regex Pattern):**
 ```bash
 pylino proxy_auth.log --pattern "Timeout|Connection Reset"
+```
+
+**4. Monitoramento e Auditoria Vivaz (Tail -f em tempo real):**
+```bash
+# Monitora a inserção de novos erros no arquivo à medida que ocorrem
+pylino production.log --tail --level ERROR
 ```
 
 ### Segurança Avançada: Bypass de Anonimização (Modo Auditoria)
