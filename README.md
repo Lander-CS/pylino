@@ -96,4 +96,3 @@ pylino dump.log --no-anonymize
 * **Extensibilidade Orientada à Segurança:** Se você atua em indústrias financeiras (PCI DSS) ou saúde (HIPAA), exija de seu time ou DPO que expanda o dicionário da estrutura nativa do arquivo nativo `anonymizer.py` com novas regras, garantindo o rastreio da cadeia customizada para a arquitetura alvo.
 
 ---
-*Escrito com zelo por profissionais de Engenharia de Software focados em DevSecOps.*
