@@ -11,8 +11,10 @@ console = Console()
 @click.option('--date', '-d', help='Filtrar por data específica (ex: 2023-10-25)')
 @click.option('--pattern', '-p', help='Filtrar por padrão Regex')
 @click.option('--tail', '-t', is_flag=True, help='Escutar o arquivo em tempo real (Tail -f)')
-@click.option('--no-anonymize', is_flag=True, help='Desativar anonimização de dados sensíveis (Risco à LGPD/GDPR)')
-def cli(filepath, level, date, pattern, tail, no_anonymize):
+@click.option('--osint', is_flag=True, help='Ativar pesquisa OSINT/GeoIP (VirusTotal & Threat Intel)')
+@click.option('--dashboard', is_flag=True, help='Exibir um Dashboard interativo com gráficos HTML/Terminal')
+@click.option('--no-anonymize', is_flag=True, help='Desativar anonimização de dados (Risco LGPD/GDPR)')
+def cli(filepath, level, date, pattern, tail, osint, dashboard, no_anonymize):
     """
     Pylino - Ferramenta CLI para Análise de Arquivos de Log.
     
@@ -22,7 +24,6 @@ def cli(filepath, level, date, pattern, tail, no_anonymize):
     """
     anonymize = not no_anonymize
     
-    # Log de segurança para auditoria
     if not anonymize:
         console.print("[bold yellow]Aviso de Segurança: Anonimização LGPD desativada pelo usuário.[/bold yellow]")
 
@@ -47,6 +48,19 @@ def cli(filepath, level, date, pattern, tail, no_anonymize):
                     lvl_str = f"[bold white]{lvl}[/bold white]"
                     
                 console.print(f"{lvl_str} | {content}")
+        elif dashboard:
+            import pylino.dashboard as dash
+            import pylino.osint as osnt
+            
+            # Precisamos extrair toda a lista para processamento analítico e montar as tabelas
+            res_list = list(results)
+            console.print("[bold cyan]⠋ Montando engine de estatísticas e painéis visuais...[/bold cyan]")
+            
+            painel = dash.process_dashboard(res_list, enrich_ip_func=True if osint else False)
+            console.print(painel)
+            
+            console.print(f"\n[bold green]✓[/bold green] Fim da análise de SOC. {len(res_list)} artefatos processados.")
+            
         else:
             table = Table(title=f"Análise de Logs: {filepath}", show_lines=False)
             table.add_column("Level", justify="center", style="cyan", no_wrap=True)
@@ -71,7 +85,7 @@ def cli(filepath, level, date, pattern, tail, no_anonymize):
                 table.add_row(lvl_str, str(content))
                 
             console.print(table)
-            console.print(f"\n[bold green]✓[/bold green] Fim da análise. {count} linhas processadas/filtradas.")
+            console.print(f"\n[bold green]✓[/bold green] Fim da análise padrão. {count} linhas filtradas.")
 
     except ValueError as ve:
         console.print(f"[bold red]Erro de Validação:[/bold red] {str(ve)}")
