@@ -21,6 +21,8 @@ Seu diferencial técnico baseia-se em varreduras *Lazy Evaluation* que preservam
 - **Filtros Multifatoriais**: Capacidade de pesquisar linhas através de severidades, datas ou Regex personalizadas (com validação anti *Prompt Injection*).
 - **Parsing Dinâmico Inteligente**: Suporte automático a múltiplos formatos, processando nativamente logs textuais, estruturas JSON (Docker, Kubernetes) ou dicionários CSV/TSV.
 - **Auditoria em Tempo Real (Tail -f)**: Opcionalidade de escutar eventos em tempo real enquanto o arquivo cresce, ideal para detecções vivas ou pentest *on the fly*.
+- **Inteligência de Ameaças (OSINT e GeoIP)**: Integre nativamente análises de IP a bancos de dados como GeoLite2 e VirusTotal API em buscas ativas no parse do log.
+- **Dashboards Visuais de SOC (Terminal UI)**: Exiba estatísticas completas, com histogramas em volume/hora (ASCII) e a tabela dos Top 5 Erros Críticos interceptados.
 
 ---
 
@@ -69,6 +71,12 @@ pylino proxy_auth.log --pattern "Timeout|Connection Reset"
 ```bash
 # Monitora a inserção de novos erros no arquivo à medida que ocorrem
 pylino production.log --tail --level ERROR
+```
+
+**5. Triagem de Segurança Rápida (Visão Gerencial de SOC com Painel e OSINT):**
+```bash
+# Realiza análise de IPs contidos e gera tabelas e gráficos ASCII para priorização
+pylino auth.log --dashboard --osint
 ```
 
 ### Segurança Avançada: Bypass de Anonimização (Modo Auditoria)
