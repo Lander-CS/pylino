@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pylino"
+version = "0.1.0"
+description = "Um analisador de logs rápido e seguro via CLI"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "click>=8.0.0",
+    "rich>=10.0.0"
+]
+
+[project.scripts]
+pylino = "pylino.cli:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]

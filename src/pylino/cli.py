@@ -1,0 +1,61 @@
+import click
+from rich.console import Console
+from rich.table import Table
+from pylino.parser import parse_and_filter
+
+console = Console()
+
+@click.command()
+@click.argument('filepath', type=click.Path(exists=True, readable=True))
+@click.option('--level', '-l', help='Filtrar por nível de severidade (INFO, WARNING, ERROR, CRITICAL)')
+@click.option('--date', '-d', help='Filtrar por data específica (ex: 2023-10-25)')
+@click.option('--pattern', '-p', help='Filtrar por padrão Regex')
+@click.option('--no-anonymize', is_flag=True, help='Desativar anonimização de dados sensíveis (Risco à LGPD/GDPR)')
+def cli(filepath, level, date, pattern, no_anonymize):
+    """
+    Pylino - Ferramenta CLI para Análise de Arquivos de Log.
+    
+    Garante alta performance utilizando geradores e Compliance
+    com LGPD mascarando PIIs (emails, CPFs, IPs) por padrão.
+    """
+    anonymize = not no_anonymize
+    
+    # Log de segurança para auditoria
+    if not anonymize:
+        console.print("[bold yellow]Aviso de Segurança: Anonimização LGPD desativada pelo usuário.[/bold yellow]")
+
+    table = Table(title=f"Análise de Logs: {filepath}", show_lines=False)
+    table.add_column("Level", justify="center", style="cyan", no_wrap=True)
+    table.add_column("Conteúdo", style="white")
+
+    try:
+        results = parse_and_filter(filepath, level, date, pattern, anonymize)
+        
+        count = 0
+        for entry in results:
+            count += 1
+            lvl = entry["level"]
+            content = entry["content"]
+            
+            # Formatação de cores no Rich
+            if lvl == "ERROR" or lvl == "CRITICAL":
+                lvl_str = f"[bold red]{lvl}[/bold red]"
+            elif lvl == "WARNING":
+                lvl_str = f"[bold yellow]{lvl}[/bold yellow]"
+            elif lvl == "INFO":
+                lvl_str = f"[bold green]{lvl}[/bold green]"
+            else:
+                lvl_str = lvl
+                
+            table.add_row(lvl_str, content)
+            
+        console.print(table)
+        console.print(f"\n[bold green]✓[/bold green] Fim da análise. {count} linhas processadas/filtradas.")
+
+    except ValueError as ve:
+        console.print(f"[bold red]Erro de Validação:[/bold red] {str(ve)}")
+    except Exception as e:
+        console.print(f"[bold red]Erro Inesperado:[/bold red] {str(e)}")
+
+if __name__ == '__main__':
+    cli()

@@ -1,0 +1,12 @@
+README.md
+pyproject.toml
+src/pylino/__init__.py
+src/pylino/anonymizer.py
+src/pylino/cli.py
+src/pylino/parser.py
+src/pylino.egg-info/PKG-INFO
+src/pylino.egg-info/SOURCES.txt
+src/pylino.egg-info/dependency_links.txt
+src/pylino.egg-info/entry_points.txt
+src/pylino.egg-info/requires.txt
+src/pylino.egg-info/top_level.txt
