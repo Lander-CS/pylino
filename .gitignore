@@ -1,1 +1,6 @@
 /.qodo
+__pycache__
+test.log
+acess.log.txt
+.venv
+.env
